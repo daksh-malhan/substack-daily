@@ -1,0 +1,10 @@
+{
+  "kind": "customsearch#search",
+  "items": [
+    { "link": "https://img.example.com/cartography-big.jpg", "mime": "image/jpeg", "image": { "width": 1200, "height": 800 } },
+    { "link": "https://img.example.com/lab-photo.jpg", "mime": "image/jpeg", "image": { "width": 900, "height": 600 } },
+    { "link": "https://img.example.com/tiny-thumb.jpg", "mime": "image/jpeg", "image": { "width": 80, "height": 60 } },
+    { "link": "https://img.example.com/assets/site-logo.png", "mime": "image/png", "image": { "width": 500, "height": 500 } },
+    { "link": "https://img.example.com/portrait.jpg", "mime": "image/jpeg", "image": { "width": 600, "height": 900 } }
+  ]
+}

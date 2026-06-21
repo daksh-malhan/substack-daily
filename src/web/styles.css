@@ -1,0 +1,389 @@
+/*
+ * "The Press" — app shell (redesign). A print-shop desk: blueprint-navy work
+ * surface, warm proof-paper bed framed by registration crosshairs, risograph
+ * two-tone ink (federal blue + fluorescent pink), and a mono "press voice".
+ * The magazine BODY below keeps its content-chosen `vibe-*` presets, themed via
+ * an inline `--accent`. All fonts are SYSTEM stacks — no remote @import/CDN — so
+ * the Library renders fully offline (MG10).
+ */
+:root {
+  /* Dark theme (default) — a press room at night: deep ink-navy desk, riso pink. */
+  --desk: #121c2a;       /* press desk (app background) */
+  --desk-2: #0c141e;     /* deeper desk for the header band */
+  --paper: #efe8d8;      /* warm proof paper (magazine sets its own) */
+  --ink: #16233c;        /* ink on paper */
+  --ink-soft: #8a98b2;   /* faded ink — rules + secondary text on the desk (readable) */
+  --flag: #ff4f6e;       /* riso fluorescent pink — the live/action ink */
+  --flag-ink: #14110e;   /* text ON the flag button — dark reads on bright pink (~6:1) */
+  --proof: #22c98c;      /* proof green — done/saved stamps */
+  --on-desk: var(--paper); /* text/icons sitting on the desk surface */
+  --hair: rgba(255, 255, 255, 0.10); /* hairline dividers on the desk */
+  --card-bg: #1d2839;    /* back-issue card — a panel lifted off the desk */
+  --card-ink: #efe8d8;
+  --card-edge: rgba(255, 255, 255, 0.09);
+  --accent: var(--flag); /* magazines without a set accent fall back to flag */
+  --mono: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Menlo, Consolas, monospace;
+  --sans: "Helvetica Neue", "Arial Nova", Arial, system-ui, sans-serif;
+}
+
+/* Light theme — warm beige press desk, espresso-brown ink, kraft-rust accent. */
+:root[data-theme="light"] {
+  --desk: #e6dac1;
+  --desk-2: #dccdac;
+  --paper: #f6f0e1;
+  --ink: #2f2416;
+  --ink-soft: #5e4e33;   /* deep brown — clears 4.5:1 on the beige desk AND header band */
+  --flag: #a8451f;       /* deep kraft-rust — reads as text (~5.4:1) and as a button fill */
+  --flag-ink: #ffffff;   /* white on deep rust (~7.5:1) */
+  --proof: #466a2c;
+  --on-desk: var(--ink);
+  --hair: rgba(0, 0, 0, 0.14);
+  --card-bg: #f6f0e1;
+  --card-ink: #2f2416;
+  --card-edge: rgba(0, 0, 0, 0.12);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  font-family: var(--mono);
+  color: var(--on-desk);
+  background: var(--desk);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  /* When a magazine opens, the room takes on its ink — ease the change. */
+  transition: background-color 320ms ease, color 320ms ease;
+}
+.press-header { transition: background-color 320ms ease, border-color 320ms ease; }
+@media (prefers-reduced-motion: reduce) {
+  body, .press-header { transition: none; }
+}
+
+/* ---- press header (masthead + nav) --------------------------------------- */
+.press-header {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: 0.75rem clamp(1rem, 3vw, 2.5rem);
+  background: var(--desk-2);
+  border-bottom: 1px solid var(--hair);
+}
+.wordmark { display: flex; align-items: center; gap: 0.7rem; }
+.reg-mark {
+  width: 20px; height: 20px; flex: none; border: 1.5px solid var(--flag); border-radius: 50%;
+  background:
+    linear-gradient(var(--flag), var(--flag)) center / 1.5px 100% no-repeat,
+    linear-gradient(var(--flag), var(--flag)) center / 100% 1.5px no-repeat;
+}
+.wordmark-text { display: flex; flex-direction: column; line-height: 1.06; }
+.wordmark-main { font-family: var(--sans); font-weight: 800; letter-spacing: -0.02em; font-size: 1.1rem; text-transform: uppercase; }
+.wordmark-sub { font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); }
+.press-nav { display: flex; gap: 0.5rem; }
+
+/* ---- buttons (riso ink, offset-shadow press feel) ------------------------- */
+.btn {
+  font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 0.55rem 1.1rem; border-radius: 2px; cursor: pointer; border: 1.5px solid transparent;
+  transition: transform 80ms ease, box-shadow 120ms ease, background 120ms ease, color 120ms ease;
+}
+.btn-flag { background: var(--flag); color: var(--flag-ink); border-color: var(--flag); box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.28); }
+.btn-flag:hover:not(:disabled) { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.32); }
+.btn-flag:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.32); }
+.btn-ghost { background: transparent; color: var(--on-desk); border-color: var(--ink-soft); }
+.btn-ghost:hover:not(:disabled) { border-color: var(--flag); color: var(--flag); }
+.btn:disabled { opacity: 0.4; cursor: progress; }
+.btn:focus-visible { outline: 2px solid var(--flag); outline-offset: 2px; }
+
+/* ---- the press bed (stage) + registration crosshairs ---------------------- */
+.press-bed {
+  position: relative;
+  min-height: calc(100vh - 58px);
+  padding: clamp(1.5rem, 4vw, 3.5rem) clamp(1rem, 4vw, 3.5rem) 5rem;
+}
+.reg {
+  position: absolute; width: 24px; height: 24px; pointer-events: none; opacity: 0.45;
+  background:
+    linear-gradient(var(--ink-soft), var(--ink-soft)) center / 1px 100% no-repeat,
+    linear-gradient(var(--ink-soft), var(--ink-soft)) center / 100% 1px no-repeat;
+}
+.reg.tl { top: 14px; left: 14px; }
+.reg.tr { top: 14px; right: 14px; }
+.reg.bl { bottom: 14px; left: 14px; }
+.reg.br { bottom: 14px; right: 14px; }
+
+/* ---- idle hero ------------------------------------------------------------ */
+.idle { max-width: 62rem; margin: clamp(2rem, 9vh, 6rem) auto 0; text-align: center; }
+.idle-kicker { font-size: 0.7rem; letter-spacing: 0.32em; text-transform: uppercase; color: var(--ink-soft); margin: 0 0 1.4rem; }
+.idle-head {
+  font-family: var(--sans); font-weight: 800; letter-spacing: -0.025em; line-height: 1.02;
+  font-size: clamp(2.2rem, 6.2vw, 4.6rem); margin: 0; color: var(--on-desk);
+}
+.idle-note { color: var(--ink-soft); font-size: 0.84rem; letter-spacing: 0.02em; margin: 1.5rem auto 2.4rem; max-width: 38rem; }
+.btn-lever { font-size: 0.98rem; padding: 0.9rem 2rem; letter-spacing: 0.1em; }
+
+/* ---- loading docket (the live press run) ---------------------------------- */
+.docket { max-width: 34rem; margin: clamp(2rem, 8vh, 5rem) auto 0; }
+.docket-head { font-size: 0.7rem; letter-spacing: 0.26em; text-transform: uppercase; color: var(--flag); margin: 0 0 1rem; }
+.docket-list { list-style: none; margin: 0; padding: 0; }
+.docket-step {
+  display: flex; align-items: baseline; gap: 0.8rem;
+  padding: 0.7rem 0.2rem; border-top: 1px dashed var(--hair);
+  font-size: 0.95rem; color: var(--ink-soft);
+}
+.docket-step .tick { font-family: var(--mono); width: 1.3em; flex: none; }
+.docket-num { margin-left: auto; font-size: 0.66rem; letter-spacing: 0.12em; color: var(--ink-soft); }
+.docket-step.pending { opacity: 0.4; }
+.docket-step.active { color: var(--on-desk); }
+.docket-step.active .tick { color: var(--flag); animation: tick-blink 1s steps(2) infinite; }
+.docket-step.done { color: var(--on-desk); }
+.docket-step.done .tick { color: var(--proof); }
+@keyframes tick-blink { 50% { opacity: 0.25; } }
+@media (prefers-reduced-motion: reduce) { .docket-step.active .tick { animation: none; } }
+.docket-pressed { margin: 1rem 0 0; color: var(--proof); font-size: 0.9rem; letter-spacing: 0.02em; }
+
+/* ---- results: the just-pressed set of deep-dives --------------------------- */
+.results-head {
+  max-width: 1180px; margin: 0 auto 1.4rem; color: var(--on-desk);
+  font-size: 1.05rem; line-height: 1.5;
+}
+
+/* ---- error panel ---------------------------------------------------------- */
+.error-panel { max-width: 34rem; margin: clamp(2rem, 8vh, 5rem) auto 0; text-align: center; }
+.error-kicker { color: var(--flag); letter-spacing: 0.24em; text-transform: uppercase; font-size: 0.7rem; margin: 0 0 0.8rem; }
+.error-msg { color: var(--on-desk); font-size: 1.05rem; margin: 0 0 1.6rem; line-height: 1.5; }
+
+/* ---- back issues (offline Library) — press-ticket cards ------------------- */
+.library-list { max-width: 1180px; margin: 0 auto; }
+.lib-empty { text-align: center; color: var(--ink-soft); font-size: 1rem; margin: 4rem auto; }
+.lib-list {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem;
+}
+.lib-card {
+  position: relative; display: flex; background: var(--card-bg); color: var(--card-ink);
+  border-radius: 2px; overflow: hidden;
+  border-top: 4px solid var(--accent);
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.28);
+}
+.lib-open {
+  flex: 1; display: flex; flex-direction: column; gap: 0.4rem; align-items: flex-start; text-align: left;
+  font-family: var(--mono); background: none; border: none; padding: 1rem 1.1rem; cursor: pointer; color: inherit;
+}
+.lib-open:hover { background: color-mix(in srgb, var(--card-ink) 7%, transparent); }
+.lib-title { font-family: var(--sans); font-weight: 800; font-size: 1.08rem; line-height: 1.15; letter-spacing: -0.01em; }
+.lib-meta { font-size: 0.7rem; color: color-mix(in srgb, var(--card-ink) 86%, transparent); letter-spacing: 0.04em; text-transform: uppercase; }
+.lib-themes { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.2rem; }
+.lib-theme {
+  font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.06em;
+  padding: 0.1rem 0.45rem; border: 1px solid var(--accent); color: var(--accent); border-radius: 2px;
+}
+.lib-delete {
+  align-self: stretch; font-family: var(--mono); background: none;
+  border: none; border-left: 1px dashed var(--card-edge);
+  color: var(--flag); font-size: 0.85rem; padding: 0 0.75rem; cursor: pointer; opacity: 0.6;
+}
+.lib-delete:hover { opacity: 1; background: var(--flag); color: var(--flag-ink); }
+
+/* ---- magazine base chrome (themed via CSS vars) --------------------------- */
+.magazine {
+  --paper: #f4f1ea;
+  --ink: #1a1a1a;
+  --muted: #6a6258;
+  --font-body: Georgia, "Times New Roman", serif;
+  --font-display: Georgia, "Times New Roman", serif;
+  --rule: 1px solid var(--ink);
+  --heading-transform: none;
+  --heading-weight: 700;
+  --heading-spacing: 0;
+
+  /* Full page width (the magazine fills the stage between its gutters). */
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: clamp(1.5rem, 3vw, 3rem) clamp(1.25rem, 4vw, 4rem);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06), 0 18px 40px -28px rgba(0, 0, 0, 0.5);
+}
+
+.mag-masthead { border-bottom: 3px double var(--ink); padding-bottom: 1.1rem; margin-bottom: 1.5rem; }
+.mag-kicker {
+  margin: 0 0 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  font-size: 0.72rem;
+  color: var(--accent);
+}
+.mag-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--heading-weight);
+  text-transform: var(--heading-transform);
+  letter-spacing: var(--heading-spacing);
+  font-size: clamp(1.9rem, 5vw, 3rem);
+  line-height: 1.08;
+}
+.mag-byline { margin: 0.6rem 0 0; color: var(--muted); font-style: italic; }
+.mag-themes {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.9rem 0 0;
+  padding: 0;
+}
+.mag-theme {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.18rem 0.6rem;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  border-radius: 999px;
+}
+
+.mag-intro { font-size: 1.2rem; line-height: 1.6; }
+.mag-intro::first-letter {
+  float: left;
+  font-family: var(--font-display);
+  font-size: 3.4rem;
+  line-height: 0.8;
+  padding: 0.1rem 0.6rem 0 0;
+  color: var(--accent);
+}
+
+.mag-section { margin-top: 2rem; }
+.mag-divider { border: none; border-top: var(--rule); margin: 2rem 0 1.2rem; }
+.mag-heading {
+  font-family: var(--font-display);
+  font-weight: var(--heading-weight);
+  text-transform: var(--heading-transform);
+  letter-spacing: var(--heading-spacing);
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+}
+.mag-prose { font-size: 1.05rem; }
+
+.mag-figure { margin: 1.2rem 0; }
+.mag-image { width: 100%; height: auto; display: block; border: 1px solid rgba(0, 0, 0, 0.15); }
+.mag-caption { margin-top: 0.4rem; font-size: 0.82rem; color: var(--muted); font-style: italic; }
+
+/* ---- MG9: pretext text-flow around a floated section image ---------------- */
+/* `.mag-flow` hosts absolutely-positioned lines (pretext) + the floated plate;
+   font MUST match `.mag-prose` so measured widths equal rendered widths. */
+.mag-flow {
+  position: relative;
+  margin: 1.2rem 0;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+/* The draggable plate. JS sets left/top/width/height; drag it to reflow the text. */
+.mag-flow-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  box-shadow: 0 6px 20px -10px rgba(0, 0, 0, 0.55);
+  cursor: grab;
+  touch-action: none; /* let pointer events drive the drag, not scroll/zoom */
+  user-select: none;
+  -webkit-user-drag: none;
+  outline: 2px solid transparent;
+  transition: outline-color 120ms ease, box-shadow 120ms ease;
+}
+.mag-flow-img:hover { outline-color: var(--accent); }
+.mag-flow-img.dragging {
+  cursor: grabbing;
+  outline-color: var(--accent);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.6);
+}
+.mag-flow-line {
+  position: absolute;
+  white-space: pre;
+  font: inherit;
+}
+/* `.mag-flow > .mag-prose` is the graceful fallback (image-less / broken image):
+   plain static paragraph, no absolute positioning. */
+.mag-flow > .mag-prose { position: static; }
+
+.mag-excerpt {
+  margin: 1.1rem 0;
+  padding: 0.4rem 0 0.4rem 1.1rem;
+  border-left: 4px solid var(--accent);
+}
+.mag-excerpt p { margin: 0 0 0.4rem; font-size: 1.08rem; }
+.mag-cite { color: var(--muted); font-size: 0.86rem; font-style: normal; }
+.mag-source { color: var(--accent); text-decoration: none; border-bottom: 1px solid currentColor; }
+.mag-source:hover { opacity: 0.8; }
+
+.mag-footer { margin-top: 2.5rem; padding-top: 1rem; border-top: var(--rule); color: var(--muted); font-size: 0.8rem; }
+
+/* ---- preset themes (each visibly distinct: type + color + rule) ----------- */
+
+/* Classic editorial — warm serif broadsheet (the default look). */
+.vibe-classic-editorial {
+  --paper: #f4f1ea; --ink: #20140a; --muted: #6a6258;
+  --font-body: Georgia, "Times New Roman", serif;
+  --font-display: "Hoefler Text", Georgia, serif;
+}
+
+/* Modern minimal — clean sans, lots of air, hairline rules, no drop cap. */
+.vibe-modern-minimal {
+  --paper: #ffffff; --ink: #111418; --muted: #8a8f96;
+  --font-body: ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif;
+  --font-display: ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif;
+  --rule: 1px solid #e3e6ea;
+  --heading-weight: 600; --heading-spacing: -0.01em;
+}
+.vibe-modern-minimal .mag-masthead { border-bottom: 1px solid #e3e6ea; }
+.vibe-modern-minimal .mag-intro::first-letter { float: none; font-size: inherit; padding: 0; color: inherit; }
+
+/* Vintage science — cream Palatino, engraving feel, double rules. */
+.vibe-vintage-science {
+  --paper: #efe7d3; --ink: #2b2418; --muted: #6f6249;
+  --font-body: Palatino, "Palatino Linotype", "Book Antiqua", serif;
+  --font-display: "Palatino Linotype", Palatino, serif;
+  --rule: 3px double var(--ink);
+  --heading-spacing: 0.01em;
+}
+
+/* Retro tech — mono display, uppercase, dark panel, neon accent feel. */
+.vibe-retro-tech {
+  --paper: #14181f; --ink: #d7e0ea; --muted: #7f8b9d;
+  --font-body: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  --font-display: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  --rule: 1px dashed #38506a;
+  --heading-transform: uppercase; --heading-spacing: 0.08em; --heading-weight: 700;
+}
+.vibe-retro-tech { box-shadow: 0 0 0 1px #2a3a4d, 0 18px 50px -24px #000; }
+.vibe-retro-tech .mag-intro::first-letter { color: var(--accent); }
+.vibe-retro-tech .mag-image { border-color: #38506a; }
+
+/* Zine — chunky condensed sans, high-contrast black/white, heavy rules. */
+.vibe-zine {
+  --paper: #fdfdfb; --ink: #0a0a0a; --muted: #444;
+  --font-body: "Arial Narrow", Arial, system-ui, sans-serif;
+  --font-display: "Arial Black", "Helvetica Neue", Arial, sans-serif;
+  --rule: 4px solid #0a0a0a;
+  --heading-transform: uppercase; --heading-weight: 900; --heading-spacing: -0.02em;
+}
+.vibe-zine .mag-title { line-height: 0.95; }
+.vibe-zine .mag-masthead { border-bottom-width: 6px; border-bottom-style: solid; }
+
+/* Mono-serif — monospace headings over a serif body, spare and typewritten. */
+.vibe-mono-serif {
+  --paper: #f7f4ee; --ink: #1c1c1c; --muted: #777;
+  --font-body: "Iowan Old Style", Georgia, serif;
+  --font-display: ui-monospace, "SF Mono", Menlo, monospace;
+  --rule: 1px solid #c9c2b4;
+  --heading-transform: uppercase; --heading-spacing: 0.04em; --heading-weight: 600;
+}
+.vibe-mono-serif .mag-kicker { color: var(--ink); }
+
+/* ---- responsive: stack the press header on narrow screens ----------------- */
+@media (max-width: 560px) {
+  .press-header { flex-direction: column; align-items: stretch; gap: 0.7rem; }
+  .press-nav { width: 100%; }
+  .press-nav .btn { flex: 1; }
+}

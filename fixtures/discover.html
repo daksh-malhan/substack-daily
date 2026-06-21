@@ -1,0 +1,20 @@
+<!doctype html>
+<!-- Synthetic Substack Discover fixture for MG2 tests. Mixes harvestable
+     publication subdomains, duplicates, reserved subdomains, the apex, and a
+     custom-domain link that must NOT be harvested by the substack-subdomain rule. -->
+<html>
+  <body>
+    <main>
+      <a href="https://foo.substack.com/p/some-post">Foo Newsletter</a>
+      <a href="https://foo.substack.com">Foo (home, duplicate)</a>
+      <a href="https://bar.substack.com/about">Bar</a>
+      <a href="https://baz.substack.com">Baz</a>
+      <a href="https://www.substack.com/discover">Discover (reserved www)</a>
+      <a href="https://open.substack.com/pub/x">Open (reserved)</a>
+      <a href="https://substack.com">Substack apex</a>
+      <a href="https://example.com/blog">A custom-domain pub (not harvested)</a>
+      <a href="/relative/link">Relative (ignored)</a>
+      <a>missing href</a>
+    </main>
+  </body>
+</html>

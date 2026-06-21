@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Substack Surprise — the press</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script>
+      // Set the theme before first paint (no flash). Saved choice wins, else OS preference.
+      try {
+        var t = localStorage.getItem("press-theme");
+        document.documentElement.dataset.theme =
+          t || (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+      } catch (e) {
+        document.documentElement.dataset.theme = "dark";
+      }
+    </script>
+  </head>
+  <body>
+    <header class="press-header">
+      <div class="wordmark">
+        <span class="reg-mark" aria-hidden="true"></span>
+        <span class="wordmark-text">
+          <span class="wordmark-main">Substack Surprise</span>
+          <span class="wordmark-sub">a press that prints one-off magazines</span>
+        </span>
+      </div>
+      <nav class="press-nav">
+        <button id="surprise" type="button" class="btn btn-flag">Surprise me</button>
+        <button id="library" type="button" class="btn btn-ghost">Back issues</button>
+        <button id="theme-toggle" type="button" class="btn btn-ghost">Light mode</button>
+      </nav>
+    </header>
+
+    <main id="stage" class="press-bed">
+      <span class="reg tl" aria-hidden="true"></span>
+      <span class="reg tr" aria-hidden="true"></span>
+      <span class="reg bl" aria-hidden="true"></span>
+      <span class="reg br" aria-hidden="true"></span>
+
+      <section id="idle" class="idle">
+        <p class="idle-kicker">No issue on the bed</p>
+        <h1 class="idle-head">Pull a random Substack<br />into a one-off magazine.</h1>
+        <p class="idle-note">
+          A real newsletter · real excerpts that link back · drag the pictures around the page · kept to read offline.
+        </p>
+        <button id="surprise-hero" type="button" class="btn btn-flag btn-lever">Surprise me <span aria-hidden="true">→</span></button>
+      </section>
+
+      <section id="docket" class="docket" hidden aria-label="Press run"></section>
+
+      <section id="error" class="error-panel" hidden role="alert">
+        <p class="error-kicker">Press jam</p>
+        <p id="error-msg" class="error-msg"></p>
+        <button id="retry" type="button" class="btn btn-flag">Try again</button>
+      </section>
+
+      <article id="magazine" class="magazine" hidden></article>
+
+      <section id="results" class="library-list" hidden aria-label="Deep-dives just pressed"></section>
+
+      <section id="library-list" class="library-list" hidden aria-label="Saved magazines"></section>
+    </main>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

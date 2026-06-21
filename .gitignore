@@ -1,0 +1,37 @@
+# secrets
+.env
+.env.local
+
+# generated / personal / potentially copyrighted reading library (portability is via copy/zip, not git)
+/library/
+!/library/.gitkeep
+
+# deps & build
+node_modules/
+dist/
+*.tsbuildinfo
+
+# tmp
+.tmp/
+/tmp/
+*.log
+
+# os
+.DS_Store
+
+# local claude config (personal paths / permission list)
+.claude/settings.local.json
+
+# stray editor extension artifact
+*.vsix
+
+# playwright verification artifacts
+.playwright-mcp/
+mg1-spike.png
+dist/
+
+# runtime state (last-pick, etc.)
+.state/
+
+# graphify knowledge graph output
+graphify-out/

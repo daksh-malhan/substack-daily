@@ -1,0 +1,34 @@
+{
+  "name": "substack-surprise-magazine",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Local web app: spin a random Substack newsletter into an offline magazine. Synthesis via local codex exec. No Claude API.",
+  "scripts": {
+    "doctor": "bun run scripts/doctor.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint src scripts",
+    "test": "bun test",
+    "probe:codex": "bun run scripts/probe-codex.ts",
+    "refresh-pool": "bun run scripts/refresh-pool.ts",
+    "clean:library": "bun run scripts/clean-library.ts",
+    "smoke:cse": "bun run scripts/smoke-cse.ts",
+    "build:web": "vite build",
+    "serve": "bun run src/server/index.ts",
+    "dev": "bun run build:web && bun run src/server/index.ts"
+  },
+  "dependencies": {
+    "@chenglou/pretext": "^0.0.8",
+    "dotenv": "^17.4.2",
+    "fast-xml-parser": "^5.9.2",
+    "node-html-parser": "^7.1.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.14",
+    "@types/node": "^25.9.3",
+    "oxlint": "^1.70.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16"
+  }
+}
