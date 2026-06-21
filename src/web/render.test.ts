@@ -10,7 +10,7 @@ import {
   safeHttpUrl,
   safeLocalImageSrc,
 } from "./render.ts";
-import { DEFAULT_ACCENT, DEFAULT_VIBE, resolveVibePresetId, safeAccent, vibeClass, VIBE_PRESET_IDS } from "./vibe.ts";
+import { DEFAULT_ACCENT, DEFAULT_VIBE, resolveVibePresetId, safeAccent, vibeClass, VIBE_PRESETS } from "./vibe.ts";
 
 function mag(over: Partial<Magazine> = {}): Magazine {
   return {
@@ -37,7 +37,7 @@ function mag(over: Partial<Magazine> = {}): Magazine {
 
 describe("vibe", () => {
   test("every known preset maps to its own class; unknown falls back to default", () => {
-    for (const id of VIBE_PRESET_IDS) expect(vibeClass(id)).toBe(`vibe-${id}`);
+    for (const id of VIBE_PRESETS) expect(vibeClass(id)).toBe(`vibe-${id}`);
     expect(resolveVibePresetId("not-a-real-preset")).toBe(DEFAULT_VIBE);
     expect(vibeClass("not-a-real-preset")).toBe(`vibe-${DEFAULT_VIBE}`);
   });

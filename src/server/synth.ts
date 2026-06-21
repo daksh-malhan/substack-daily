@@ -20,15 +20,7 @@ import { join } from "node:path";
 import { z } from "zod";
 import { normalize } from "../shared/text.ts";
 import type { FetchResult, Post } from "../shared/post.ts";
-
-export const VIBE_PRESETS = [
-  "classic-editorial",
-  "modern-minimal",
-  "vintage-science",
-  "retro-tech",
-  "zine",
-  "mono-serif",
-] as const;
+import { resolveVibePresetId, safeAccent, VIBE_PRESETS } from "../shared/vibe.ts";
 
 export type SynthErrorCode = "budget" | "runner" | "timeout" | "parse" | "validate";
 
@@ -307,10 +299,8 @@ export function validateAndAttach(
     throw new SynthError("no valid excerpts survived the anti-fabrication check", "validate");
   }
 
-  const vibePresetId = (VIBE_PRESETS as readonly string[]).includes(spec.vibePresetId)
-    ? spec.vibePresetId
-    : "classic-editorial";
-  const accentColor = /^#[0-9a-fA-F]{6}$/.test(spec.accentColor) ? spec.accentColor : "#9c4a2f";
+  const vibePresetId = resolveVibePresetId(spec.vibePresetId);
+  const accentColor = safeAccent(spec.accentColor);
 
   return {
     newsletter,
