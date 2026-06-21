@@ -46,13 +46,36 @@ The "Press" shell: blueprint-navy desk, proof-paper bed with registration crossh
 
 ## How it works
 
+```mermaid
+flowchart TB
+  UI["<b>Browser</b> · src/web<br/>main · render · vibe · pretext layout"]
+
+  subgraph SRV["Bun server · binds 127.0.0.1 · src/server"]
+    direction TB
+    APP["app.ts — handleSurprise / streamSurprise<br/>security.ts · loopback · same-origin · SSRF"]
+    ORCH["<b>deep.ts — runDeepDive</b> · one magazine / press<br/>DeepCache · 70% fresh pick / 30% reuse un-pressed theme"]
+    POOL["pool.ts<br/><i>pick</i>"]
+    FETCH["fetcher.ts · archive-api.ts<br/><i>fetch</i> ~50 free full-text"]
+    CUR["curate.ts<br/><i>curate</i> → cluster deep articles"]
+    SYN["synth.ts<br/><i>synth</i> → magazine + cited excerpts"]
+    IMG["images.ts · image-download.ts<br/><i>images</i> · SSRF/MIME/dim guards"]
+    VAULT["vault.ts<br/><i>persist</i> · atomic write"]
+    LIB["library.ts<br/>offline read"]
+  end
+
+  CODEX[["codex exec CLI<br/>synthesis — never the Claude API"]]
+  STORE[("./library/<br/>Obsidian vault + offline store")]
+
+  UI -- "POST /surprise · SSE" --> APP
+  APP --> ORCH
+  ORCH --> POOL --> FETCH --> CUR --> SYN --> IMG --> VAULT --> STORE
+  CUR -. "inert Post.contentText only" .-> CODEX
+  SYN -. "inert Post.contentText only" .-> CODEX
+  ORCH -. "stage / result events" .-> UI
+  UI -- "GET /api/library" --> LIB --> STORE
 ```
-Surprise me  ──▶  runDeepDive (deep.ts)
-   pick publication ──▶ deep-fetch archive (~50 free full-text articles)
-                    ──▶ curate at ARTICLE level (codex: drop shallow/tech/AI, cluster deep ones into themes)
-                    ──▶ press ONE strong cluster:
-                          synth (codex, theme-focused) ──▶ images ──▶ persist to ./library/
-```
+
+> **Two spines, one seam.** `Post` (`src/shared/post.ts`) is the *input* type every fetch/parse/curate step produces and `synth.ts` consumes; `Magazine` (`src/shared/magazine.ts`) is the *output* type `synth` produces and images/vault/render/library consume. `synth.ts` is the seam — and the place where only inert `Post.contentText` (never HTML) crosses to Codex.
 
 Per-session state (`DeepCache`) holds fetched publications and a `pressed` set of `(resolvedDomain, theme)` keys. Each press is **~70% a fresh pick** / **~30% a reused un-pressed theme** from an already-fetched pub (no re-fetch), and never repeats a theme. The fresh path retries up to 4 picks, bounded by a 6-minute acquisition-start deadline.
 
