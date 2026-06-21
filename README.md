@@ -1,6 +1,19 @@
 # Substack Surprise — Deep-Dive Magazine Generator
 
+![Runtime: Bun](https://img.shields.io/badge/runtime-Bun-000?logo=bun&logoColor=white)
+![Language: TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
+![Synthesis: codex exec](https://img.shields.io/badge/synthesis-codex%20exec-1f6feb)
+![No Claude API](https://img.shields.io/badge/Claude%20API-none-critical)
+![Vault: Obsidian-compatible](https://img.shields.io/badge/vault-Obsidian--compatible-7C3AED?logo=obsidian&logoColor=white)
+![Tests: bun:test](https://img.shields.io/badge/tests-bun%3Atest-000)
+![Lint: oxlint](https://img.shields.io/badge/lint-oxlint-cc9900)
+![Local-only: 127.0.0.1](https://img.shields.io/badge/bind-127.0.0.1-2ea44f)
+
 A **local-first** web app that turns a randomly picked **"brainfood" Substack** (philosophy, psychology, culture, meaning, human behavior, literature — *not* AI/tech/startup/news) into an offline, **Obsidian-compatible deep-dive magazine**.
+
+![A rendered deep-dive magazine](docs/screenshots/magazine.png)
+
+> *A pressed deep-dive magazine — drop-cap intro, sections with connective tissue, cited excerpts that link back, full-width pretext layout.*
 
 Press **"Surprise me"** → the app picks a publication, deep-fetches its archive (~50 free, full-text articles), curates and clusters the *deep* survivors into themes, presses **one** strong theme into a magazine that cites every article it uses, acquires images, and persists everything into a portable vault at `./library/`. Press again for another — a fresh publication (~70%) or an un-pressed theme from a publication already fetched this session (~30%) — and it **never repeats a `(publication, theme)` pair**.
 
@@ -17,6 +30,16 @@ Press **"Surprise me"** → the app picks a publication, deep-fetches its archiv
 - **Offline Library mode.** Re-read any saved magazine with no network and no codex — images served same-origin from the vault.
 - **Dynamic [pretext](https://chenglou.me/pretext/dynamic-layout/) layout.** Draggable article image with *live* text reflow around it, full page width, debounced resize.
 - **Security-hardened.** Loopback-only bind, strict same-origin mutations, SSRF-guarded fetches, byte/time/redirect caps, atomic vault writes.
+
+---
+
+## Screenshots
+
+| The press (idle) | Back issues (offline library) |
+|---|---|
+| ![Landing](docs/screenshots/landing.png) | ![Back issues](docs/screenshots/back-issues.png) |
+
+The "Press" shell: blueprint-navy desk, proof-paper bed with registration crosshairs, mono press-voice chrome, light/dark toggle. "Back issues" lists every saved magazine for offline re-reading.
 
 ---
 
