@@ -8,6 +8,7 @@
 ![Tests: bun:test](https://img.shields.io/badge/tests-bun%3Atest-000)
 ![Lint: oxlint](https://img.shields.io/badge/lint-oxlint-cc9900)
 ![Local-only: 127.0.0.1](https://img.shields.io/badge/bind-127.0.0.1-2ea44f)
+![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
 A **local-first** web app that turns a randomly picked **"brainfood" Substack** (philosophy, psychology, culture, meaning, human behavior, literature — *not* AI/tech/startup/news) into an offline, **Obsidian-compatible deep-dive magazine**.
 
@@ -208,4 +209,4 @@ docs/          codex-contract.md (pinned CLI contract)
 
 ## License
 
-Personal/local project — no license specified.
+[MIT](LICENSE) © 2026 Daksh Malhan.
